@@ -70,6 +70,20 @@ export const GuestProfileModal: React.FC<GuestProfileModalProps> = ({ isOpen, on
         >
           Готово
         </button>
+
+        <a
+          href="/admin"
+          onClick={(e) => {
+            e.preventDefault();
+            onClose();
+            window.history.pushState({}, '', '/admin');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+          }}
+          className="text-center text-[10.5px] text-[#86736d] hover:text-[#8d4933] transition-colors pt-0.5 flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-[13px]">admin_panel_settings</span>
+          Панель администратора (CRM)
+        </a>
       </div>
     </div>
   );

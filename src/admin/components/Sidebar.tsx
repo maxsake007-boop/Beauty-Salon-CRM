@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, CalendarCheck, Sparkles, MoreVertical, Store, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, CalendarCheck, Sparkles, Store, LogOut } from 'lucide-react';
 import { NavTab, SalonSettings } from '../types';
 
 interface SidebarProps {
@@ -7,6 +7,8 @@ interface SidebarProps {
   onSelectTab: (tab: NavTab) => void;
   settings: SalonSettings;
   newBookingsCount: number;
+  adminUsername?: string;
+  onLogout?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -14,6 +16,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectTab,
   settings,
   newBookingsCount,
+  adminUsername = 'Администратор',
+  onLogout,
 }) => {
   const navItems = [
     {
@@ -35,6 +39,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: null,
     },
   ];
+
+  const initials = adminUsername.trim().slice(0, 2).toUpperCase() || 'АД';
 
   return (
     <aside className="flex h-screen w-64 flex-shrink-0 flex-col border-r border-[#E3DED7] bg-[#FAF8F5] p-4 text-[#1F1F1E]">
@@ -109,19 +115,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Footer / User profile */}
-      <div className="flex items-center justify-between rounded-xl border border-[#E3DED7] bg-white p-2.5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#8D4933] font-semibold text-white text-xs">
-            ЕВ
+      <div className="flex items-center justify-between rounded-xl border border-[#E3DED7] bg-white p-2.5 shadow-2xs">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#8D4933] font-semibold text-white text-xs">
+            {initials}
           </div>
-          <div>
-            <div className="text-xs font-semibold text-[#1F1F1E]">Елена В.</div>
+          <div className="min-w-0">
+            <div className="text-xs font-semibold text-[#1F1F1E] truncate">
+              {adminUsername}
+            </div>
             <div className="text-[11px] text-[#686662]">Администратор</div>
           </div>
         </div>
-        <button className="rounded-lg p-1 text-[#86736D] hover:bg-[#F5F2EB] hover:text-[#1F1F1E]">
-          <MoreVertical className="h-4 w-4" />
-        </button>
+
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            title="Выйти из аккаунта"
+            className="rounded-lg p-1.5 text-[#86736D] hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
+        )}
       </div>
     </aside>
   );

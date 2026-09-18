@@ -14,8 +14,23 @@ import { ServicesView } from './components/ServicesView';
 import { TelegramMiniAppModal } from './components/TelegramMiniAppModal';
 import { NewServiceModal } from './components/NewServiceModal';
 import { TelegramContactModal } from './components/TelegramContactModal';
+import { AdminLoginScreen } from './components/AdminLoginScreen';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return (
+      localStorage.getItem('lumiere_admin_auth') === 'true' ||
+      sessionStorage.getItem('lumiere_admin_auth') === 'true'
+    );
+  });
+  const [adminUsername, setAdminUsername] = useState<string>(() => {
+    return (
+      localStorage.getItem('lumiere_admin_user') ||
+      sessionStorage.getItem('lumiere_admin_user') ||
+      'admin'
+    );
+  });
+
   const [currentTab, setCurrentTab] = useState<NavTab>('services');
   const [services, setServices] = useState<ServiceItem[]>(initialServices);
   const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments);
@@ -37,6 +52,27 @@ export default function App() {
   const showNotification = (msg: string) => {
     setAppNotification(msg);
     setTimeout(() => setAppNotification(null), 3500);
+  };
+
+  const handleLoginSuccess = (user: string, remember: boolean) => {
+    setIsAuthenticated(true);
+    setAdminUsername(user);
+    if (remember) {
+      localStorage.setItem('lumiere_admin_auth', 'true');
+      localStorage.setItem('lumiere_admin_user', user);
+    } else {
+      sessionStorage.setItem('lumiere_admin_auth', 'true');
+      sessionStorage.setItem('lumiere_admin_user', user);
+    }
+    showNotification(`Добро пожаловать в панель управления, ${user}!`);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('lumiere_admin_auth');
+    localStorage.removeItem('lumiere_admin_user');
+    sessionStorage.removeItem('lumiere_admin_auth');
+    sessionStorage.removeItem('lumiere_admin_user');
   };
 
   // Service operations
@@ -164,6 +200,18 @@ export default function App() {
   // Count pending bookings for badge
   const newBookingsCount = appointments.filter((a) => a.status === 'new').length;
 
+  if (!isAuthenticated) {
+    return (
+      <AdminLoginScreen
+        onSuccess={handleLoginSuccess}
+        onBackToClient={() => {
+          window.history.pushState({}, '', '/');
+          window.dispatchEvent(new PopStateEvent('popstate'));
+        }}
+      />
+    );
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-[#FAF8F5] text-[#1F1F1E]">
       {/* Fixed Left Sidebar */}
@@ -172,12 +220,22 @@ export default function App() {
         onSelectTab={setCurrentTab}
         settings={settings}
         newBookingsCount={newBookingsCount}
+        adminUsername={adminUsername}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Sticky Top Header */}
-        <Header settings={settings} currentTab={currentTab} />
+        <Header
+          settings={settings}
+          currentTab={currentTab}
+          onLogout={handleLogout}
+          onNavigateToClient={() => {
+            window.history.pushState({}, '', '/');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+          }}
+        />
 
         {/* Dynamic Screen View */}
         <main className="flex-1 overflow-y-auto px-6 py-6 lg:px-8">
