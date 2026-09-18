@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --font-epilogue: "Epilogue", serif, sans-serif;
+  --font-manrope: "Manrope", sans-serif;
+  --font-display: "Epilogue", serif, sans-serif;
+  --font-body: "Manrope", sans-serif;
+}
+
+@layer base {
+  :root {
+    --font-epilogue: "Epilogue", serif, sans-serif;
+    --font-manrope: "Manrope", sans-serif;
+  }
+
+  body {
+    font-family: var(--font-manrope, "Manrope", sans-serif);
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.font-epilogue {
+  font-family: "Epilogue", serif, sans-serif;
+}
+
+.font-manrope {
+  font-family: "Manrope", sans-serif;
+}
+
+.font-display {
+  font-family: "Epilogue", serif, sans-serif;
+}
+
+.font-body {
+  font-family: "Manrope", sans-serif;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f2eb;
+}
+::-webkit-scrollbar-thumb {
+  background: #d9c1bb;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b86b53;
+}
+
+/* Hide scrollbars across modern browsers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

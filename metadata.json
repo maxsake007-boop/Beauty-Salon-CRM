@@ -1,0 +1,6 @@
+{
+  "name": "Lumière Haute Beauté",
+  "description": "Авторские ритуалы красоты, безупречный ногтевой сервис и запись на процедуры в салон Lumière Haute Beauté в Ташкенте.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
